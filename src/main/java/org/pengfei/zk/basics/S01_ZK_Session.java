@@ -62,6 +62,39 @@ public class S01_ZK_Session {
         * field in this znode path, which will generate events, and upon receiving these events, the DataWatcher
         * class will print the changed data onto the console.
         * */
-MyBasicZKExp.exp2();
+   // MyBasicZKExp.exp2();
+
+        /**************************************** 1.3 A cluster monitor example  *********************************/
+
+        /*
+        * In this chapter, we'll develop a minimalistic distributed cluster monitor model using the ZooKeeper
+        * Java client APIs. Building this monitoring model using the ephemeral znode concept of ZooKeeper, as
+        * described in the following steps:
+        * 1. Every production server runs a ZooKeeper client as a daemon process. This process connects to the
+        *    ZooKeeper server and creates an ephemeral znode with a name, preferably its network name or host name
+        *    under a predefined path in the ZooKeeper namespace, say /Members .
+        * 2. The cloud controller node(s) runs a ZooKeeper watcher process, which keeps a watch on the path
+        *    /Members and listens for events of the type NodeChildrenChanged . This watcher process runs as a
+        *    service or daemon and sets/resets watches on the path, and has the logic implemented to call
+        *    the appropriate module to take necessary actions for watch events.
+        * 3. Now, if a production server goes down, the ZooKeeper client process gets killed. Owing to the unique
+        *    property of ephemeral znodes, the ZooKeeper service automatically deletes the znode in the path /Members .
+        *
+        * 4. The deletion of the znode raises a NodeChildrenChanged event, and as a result, the watcher
+        *    process in the cloud controller gets a notification. By calling a getChildren method in the path /Members,
+        *    it can figure out which server node has gone down.
+        * 5. The controller node can then take the appropriate actions, such as spawning off the recovery logic to
+        *    restart the faulted services in another server.
+        * 6. This logic can be built to work in real time, guaranteeing for near-zero downtime and highly available
+        *    services.
+        *
+        * We develop two Java classes:
+        * - ClusterMonitor: It will continuously run a watcher to keep a watch on the path /Members. After processing
+        *                   the raised events, we will print the list of znodes in the console and reset the watch.
+        * - ClusterClient: It will initiate a connection to the ZooKeeper server, creating an ephemeral znode under
+        *                   /Members.
+        * Check MyBasicZKExp.exp3() for a full example
+        * */
+        MyBasicZKExp.exp3();
     }
 }

@@ -2,9 +2,13 @@ package org.pengfei.zk.basics.source;
 
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
+import org.pengfei.zk.basics.source.cluster_monitor.ClusterClient;
+import org.pengfei.zk.basics.source.cluster_monitor.ClusterMonitor;
 
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.util.List;
+import java.util.Random;
 
 public class MyBasicZKExp {
     //host can be the url or ip of a zk node
@@ -73,5 +77,46 @@ public class MyBasicZKExp {
         }
     }
 
+public static void exp3(){
+        String hostPort="localhost:2181";
 
+        //run the cluster monitor
+    ClusterMonitor clusterMonitor=null;
+    try {
+        clusterMonitor=new ClusterMonitor(hostPort);
+        new Thread(clusterMonitor).start();
+    } catch (IOException e) {
+        e.printStackTrace();
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    } catch (KeeperException e) {
+        e.printStackTrace();
+    }
+
+    //create 10 client and run them on the cluster
+
+    Long base = new Random().nextLong();
+    ClusterClient[] clients=new ClusterClient[10];
+    for(int i=0;i<10;i++){
+        Long processId=base+i;
+        ClusterClient clusterClient = new ClusterClient(hostPort, processId);
+        clients[i]=clusterClient;
+        new Thread(clusterClient).start();
+    }
+
+    // wait 10 sec
+    try {
+        Thread.sleep(10000);
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+
+    // close 10 client
+    for(int i=0;i<10;i++){
+        clients[i].close();
+    }
+
+    // close the monitor
+    clusterMonitor.close();
+}
 }
