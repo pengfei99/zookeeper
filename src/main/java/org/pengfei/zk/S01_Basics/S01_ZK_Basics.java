@@ -1,10 +1,10 @@
-package org.pengfei.zk.basics;
+package org.pengfei.zk.S01_Basics;
 
-import org.pengfei.zk.basics.source.MyBasicZKExp;
+import org.pengfei.zk.S01_Basics.source.MyBasicZKExp;
 
 import java.io.IOException;
 
-public class S01_ZK_Session {
+public class S01_ZK_Basics {
     public static void main(String[] args) throws IOException {
 
     /****************************************1.1 Create ZooKeeper client Session *********************************/

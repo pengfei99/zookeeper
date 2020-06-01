@@ -1,4 +1,4 @@
-package org.pengfei.zk.basics.source;
+package org.pengfei.zk.S01_Basics.source;
 
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
